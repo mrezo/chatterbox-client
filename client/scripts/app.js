@@ -7,6 +7,8 @@ var message = {
   roomname: '4chan'
 };
 
+app.init = function () {};
+
 $.ajax({
   // This is the url you should use to communicate with the parse API server.
   url: 'https://api.parse.com/1/classes/messages',
