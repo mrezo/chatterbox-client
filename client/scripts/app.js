@@ -6,7 +6,9 @@ var message = {
   roomname: 'lobby'
 };
 
-app.init = function () {};
+app.init = function() {
+  $('.username').on('click', app.addFriend);
+};
 
 app.send = function() {
   $.ajax({
@@ -46,11 +48,15 @@ app.clearMessages = function() {
 };
 
 app.addMessage = function (message) {
-  $('#chats').append('<div>' + message + ' </div>');
+  $('#chats').append('<div class="username">' + message.text + ' </div>');
 };
 
 app.addRoom = function(roomName) {
   $('#roomSelect').append('<div>' + roomName + '</div>');
+};
+
+app.addFriend = function() {
+  console.log('clicked');
 };
 // $.ajax({
 //   // This is the url you should use to communicate with the parse API server.
