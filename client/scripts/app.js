@@ -1,16 +1,14 @@
 // YOUR CODE HERE:
 var app = {};
-
 var message = {
-  username: 'shawndrost',
-  text: 'trololo',
-  roomname: '4chan'
+  username: 'Mel Brooks',
+  text: 'It\'s good to be the king',
+  roomname: 'lobby'
 };
 
 app.init = function () {};
 
 app.send = function() {
-
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
     url: 'https://api.parse.com/1/classes/messages',
@@ -25,7 +23,6 @@ app.send = function() {
       console.error('chatterbox: Failed to send message', data);
     }
   });
-
 };
 
 // $.ajax({
