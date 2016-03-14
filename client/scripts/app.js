@@ -44,6 +44,10 @@ app.fetch = function () {
 app.clearMessages = function() {
   $('#chats').empty();
 };
+
+app.addMessage = function (message) {
+  $('#chats').append('<div>' + message + ' </div>');
+};
 // $.ajax({
 //   // This is the url you should use to communicate with the parse API server.
 //   url: 'https://api.parse.com/1/classes/messages',
