@@ -40,6 +40,10 @@ app.fetch = function () {
     }
   });
 };
+
+app.clearMessages = function() {
+  $('#chats').empty();
+};
 // $.ajax({
 //   // This is the url you should use to communicate with the parse API server.
 //   url: 'https://api.parse.com/1/classes/messages',
