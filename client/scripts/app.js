@@ -8,6 +8,7 @@ var message = {
 
 app.init = function() {
   $('.username').on('click', app.addFriend);
+  $('#send .submit').on('submit', app.handleSubmit);
 };
 
 app.send = function() {
@@ -57,6 +58,10 @@ app.addRoom = function(roomName) {
 
 app.addFriend = function() {
   console.log('clicked');
+};
+
+app.handleSubmit = function() {
+
 };
 // $.ajax({
 //   // This is the url you should use to communicate with the parse API server.
