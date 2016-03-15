@@ -36,9 +36,11 @@ app.fetch = function () {
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message received');
-      console.log(data);
+      app.clearMessages();
       for (var i = 0; i < data.results.length; i++) {
-        app.addMessage(data.results[i]);
+        if (data.results[i].username) {
+          app.addMessage(data.results[i]);
+        }
       }
     },
     error: function (data) {
