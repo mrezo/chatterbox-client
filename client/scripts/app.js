@@ -1,7 +1,13 @@
 var app = {};
 
 app.init = function() {
-  $(document).on('click', '.username', app.addFriend);
+  $(document).on('click', '#chats div', function() {
+    if ($(this).attr('class')) {
+      var roomName = $(this).attr('class').split(' ')[1];
+      app.fetch(roomName);
+    }
+    app.addFriend;
+  });
   $(document).on('click', '.submit', app.handleSubmit);
 };
 
@@ -22,7 +28,7 @@ app.send = function(message) {
   });
 };
 
-app.fetch = function () {
+app.fetch = function (roomName) {
   $.ajax({
     url: 'https://api.parse.com/1/classes/messages',
     type: 'GET',
@@ -34,7 +40,7 @@ app.fetch = function () {
       for (var i = 0; i < data.results.length; i++) {
         if (data.results[i].username) {
           var temp = _stringFilter(data.results[i]);
-          app.addMessage(temp);
+          app.addMessage(temp, roomName);
 
           if (!roomNames[temp.roomname]) {
             $('.select').append('<option>' + temp.roomname + '</option>');
@@ -56,7 +62,7 @@ var _stringFilter = function(object) {
   if (temp.username) {    
     var tempUsername = temp.username.split('');
     for (var i = 0; i < tempUsername.length; i++) {
-      if (tempUsername[i] === '<' || tempUsername[i] === '(') {
+      if (tempUsername[i] === '<' || tempUsername[i] === '(' || tempUsername[i] === ' ') {
         tempUsername[i] = '_';
       }
     }
@@ -80,7 +86,7 @@ var _stringFilter = function(object) {
   if (temp.roomname) {
     var tempRoom = temp.roomname.split('');
     for (var i = 0; i < tempRoom.length; i++) {
-      if (tempRoom[i] === '<' || tempRoom[i] === '(') {
+      if (tempRoom[i] === '<' || tempRoom[i] === '(' || tempRoom[i] === ' ') {
         tempRoom[i] = '_';
       }
     }
@@ -98,8 +104,14 @@ app.clearAll = function() {
   $('.select').empty();
 };
 
-app.addMessage = function (message) {
-  $('#chats').append('<div class="username">' + message.username + ': <span>' + message.text + '</span>' + ' </div>');
+app.addMessage = function (message, filter) {
+  if (!filter) {
+    $('#chats').append('<div class="' + message.username + ' ' + message.roomname + '">' + message.username + ': <span>' + message.text + '</span>' + ' </div>');
+  } else {
+    if (message.roomname === filter) {
+      $('#chats').append('<div class="' + message.username + ' ' + message.roomname + '">' + message.username + ': <span>' + message.text + '</span>' + ' </div>');
+    }
+  }
 };
 
 app.addRoom = function(roomName) {
@@ -117,30 +129,12 @@ app.handleSubmit = function() {
     roomname: 'THE BEST ROOM EVA'
   };
   app.send(message);
+  $('input').val('');
 };
 
-app.user = function () {
-  $.ajax({
-    url: 'https://api.parse.com/1/users/ofNyMWNPHD',
-    type: 'GET',
-    data: JSON.stringify(message),
-    contentType: 'application/json',
-    success: function (data) {
-      console.log(data);
-      app.clearMessages();
-      for (var i = 0; i < data.results.length; i++) {
-        if (data.results[i].username) {
-          app.addMessage(_stringFilter(data.results[i]));
-        }
-      }
-    },
-    error: function (data) {
-      // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      console.error('chatterbox: Failed to receive message', data);
-    }
-  });
-};
-
-setInterval(app.fetch, 500);
+setInterval(app.fetch, 10000);
 
 app.init();
+
+var message = {};
+app.fetch();
