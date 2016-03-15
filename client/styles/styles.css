@@ -1,8 +1,13 @@
+html {
+    height: 100%;
+}
+
 body {
     background: #eee;
     text-align: center;
     padding: 0 25px;
     font-family: arial, sans-serif;
+    height: 90%;
 }
 
 #main, #chats {
@@ -81,4 +86,9 @@ form input[type=text] {
 
 .spinner img {
     padding: 10px;
+}
+
+#chats {
+    height: 50%;
+    overflow: auto;
 }
