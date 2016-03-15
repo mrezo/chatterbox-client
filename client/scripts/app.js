@@ -43,7 +43,7 @@ app.fetch = function (roomName) {
           app.addMessage(temp, roomName);
 
           if (!roomNames[temp.roomname]) {
-            $('.select').append('<option>' + temp.roomname + '</option>');
+            $('.select').append('<option value=' + temp.roomname.toLowerCase() + '>' + temp.roomname + '</option>');
             roomNames[temp.roomname] = temp.roomname;
           }
         }
@@ -126,7 +126,7 @@ app.handleSubmit = function() {
   var message = {
     username: decodeURIComponent(document.location.search.split('=')[1]),
     text: $('input').val(),
-    roomname: 'THE BEST ROOM EVA'
+    roomname: $('select option:selected').val()
   };
   app.send(message);
   $('input').val('');
