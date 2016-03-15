@@ -1,14 +1,14 @@
 // YOUR CODE HERE:
 var app = {};
 var message = {
-  username: 'Mel Brooks',
-  text: 'It\'s good to be the king',
-  roomname: 'lobby'
+  username: 'SUPER GREY ANIMAL',
+  text: 'OHHHH MA GAAAAAA',
+  roomname: 'aquarium'
 };
 
 app.init = function() {
-  $('.username').on('click', app.addFriend);
-  $('#send .submit').on('submit', app.handleSubmit);
+  $(document).on('click', '.username', app.addFriend);
+  $(document).on('click', '.submit', app.handleSubmit);
 };
 
 app.send = function() {
@@ -35,7 +35,6 @@ app.fetch = function () {
     data: JSON.stringify(message),
     contentType: 'application/json',
     success: function (data) {
-      console.log('chatterbox: Message received');
       app.clearMessages();
       for (var i = 0; i < data.results.length; i++) {
         if (data.results[i].username) {
@@ -56,7 +55,7 @@ var _stringFilter = function(object) {
   var tempText = temp.text.split(''); 
   var tempRoom = temp.roomname.split('');
   for (var i = 0; i < tempUsername.length; i++) {
-    if (tempUsername[i] === '<' || tempUsername[i] === '>') {
+    if (tempUsername[i] === '<' || tempUsername[i] === '(') {
       tempUsername[i] = ' ';
     }
   }
@@ -64,7 +63,7 @@ var _stringFilter = function(object) {
   temp.username = tempUsername.join('');
 
   for (var i = 0; i < tempText.length; i++) {
-    if (tempText[i] === '<' || tempText[i] === '>') {
+    if (tempText[i] === '<' || tempText[i] === '(') {
       tempText[i] = ' ';
     }
   }
@@ -72,7 +71,7 @@ var _stringFilter = function(object) {
   temp.text = tempText.join('');
 
   for (var i = 0; i < tempRoom.length; i++) {
-    if (tempRoom[i] === '<' || tempRoom[i] === '>') {
+    if (tempRoom[i] === '<' || tempRoom[i] === '(') {
       tempRoom[i] = ' ';
     }
   }
@@ -99,8 +98,9 @@ app.addFriend = function() {
 };
 
 app.handleSubmit = function() {
-
+  app.send();
 };
 
 setInterval(app.fetch, 500);
 
+app.init();
