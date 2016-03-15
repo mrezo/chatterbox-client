@@ -30,12 +30,16 @@ app.send = function() {
 
 app.fetch = function () {
   $.ajax({
-    url: undefined,
+    url: 'https://api.parse.com/1/classes/messages',
     type: 'GET',
     data: JSON.stringify(message),
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message received');
+      console.log(data);
+      for (var i = 0; i < data.results.length; i++) {
+        app.addMessage(data.results[i]);
+      }
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -49,7 +53,7 @@ app.clearMessages = function() {
 };
 
 app.addMessage = function (message) {
-  $('#chats').append('<div class="username">' + message.text + ' </div>');
+  $('#chats').append('<div class="username">' + message.username + ': <span>' + message.text + '</span>' + ' </div>');
 };
 
 app.addRoom = function(roomName) {
@@ -63,19 +67,6 @@ app.addFriend = function() {
 app.handleSubmit = function() {
 
 };
-// $.ajax({
-//   // This is the url you should use to communicate with the parse API server.
-//   url: 'https://api.parse.com/1/classes/messages',
-//   type: 'POST',
-//   data: JSON.stringify(message),
-//   contentType: 'application/json',
-//   success: function (data) {
-//     console.log('chatterbox: Message sent');
-//   },
-//   error: function (data) {
-//     // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-//     console.error('chatterbox: Failed to send message', data);
-//   }
-// });
 
+setInterval(app.fetch, 500);
 
