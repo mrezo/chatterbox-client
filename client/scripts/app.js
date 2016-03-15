@@ -39,7 +39,7 @@ app.fetch = function () {
       app.clearMessages();
       for (var i = 0; i < data.results.length; i++) {
         if (data.results[i].username) {
-          app.addMessage(data.results[i]);
+          app.addMessage(_stringFilter(data.results[i]));
         }
       }
     },
@@ -48,6 +48,38 @@ app.fetch = function () {
       console.error('chatterbox: Failed to receive message', data);
     }
   });
+};
+
+var _stringFilter = function(object) {
+  var temp = object;
+  var tempUsername = temp.username.split('');
+  var tempText = temp.text.split(''); 
+  var tempRoom = temp.roomname.split('');
+  for (var i = 0; i < tempUsername.length; i++) {
+    if (tempUsername[i] === '<' || tempUsername[i] === '>') {
+      tempUsername[i] = ' ';
+    }
+  }
+
+  temp.username = tempUsername.join('');
+
+  for (var i = 0; i < tempText.length; i++) {
+    if (tempText[i] === '<' || tempText[i] === '>') {
+      tempText[i] = ' ';
+    }
+  }
+
+  temp.text = tempText.join('');
+
+  for (var i = 0; i < tempRoom.length; i++) {
+    if (tempRoom[i] === '<' || tempRoom[i] === '>') {
+      tempRoom[i] = ' ';
+    }
+  }
+
+  temp.roomname = tempRoom.join('');
+
+  return temp;
 };
 
 app.clearMessages = function() {
