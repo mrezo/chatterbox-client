@@ -10,8 +10,11 @@ app.init = function() {
   });
   $(document).on('click', '.submit', app.handleSubmit);
   $(document).on('change', 'select', function() {
-    console.log('grey animals');
-    app.fetch($('select option:selected').val());
+    if ($('select option:selected').val() === 'other') {
+      $('.dropDownMenu').after('<form>Roomname:<br><input class="roomInput" type="text"></input></form>');
+    } else {
+      app.fetch($('select option:selected').val());
+    }
   });
 };
 
@@ -40,12 +43,13 @@ app.fetch = function (filter) {
     contentType: 'application/json',
     success: function (data) {
       app.clearAll();
+      $('.dropDownMenu').append('<option value="other">Other...</option>');
       var roomNameStorage = {};
       for (var i = 0; i < data.results.length; i++) {
         var tempObject = _stringFilter(data.results[i]);
         app.addMessage(tempObject, filter);
         if (!roomNameStorage[tempObject.roomname]) {
-          $('.dropDownMenu').append('<option value=' + tempObject.roomname.toLowerCase() + '>' + tempObject.roomname + '</option>');
+          $('.dropDownMenu').prepend('<option value=' + tempObject.roomname.toLowerCase() + '>' + tempObject.roomname + '</option>');
           roomNameStorage[tempObject.roomname] = true;
         }
       }
@@ -123,14 +127,21 @@ app.addFriend = function() {
 };
 
 app.handleSubmit = function() {
+  var roomInputName;
+  if ($('select option:selected').val() === 'other') {
+    roomInputName = $('.roomInput').val();
+  } else {
+    roomInputName = $('select option:selected').val();
+  }
 
   var message = {
     username: decodeURIComponent(document.location.search.split('=')[1]),
-    text: $('input').val(),
-    roomname: $('select option:selected').val()
+    text: $('.messageInput').val(),
+    roomname: roomInputName
   };
   app.send(message);
-  $('input').val('');
+  $('.messageInput').val('');
+  $('.roomInput').val('');
 };
 
 setInterval(app.fetch, 10000);
