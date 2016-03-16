@@ -9,6 +9,10 @@ app.init = function() {
     app.addFriend;
   });
   $(document).on('click', '.submit', app.handleSubmit);
+  $(document).on('change', 'select', function() {
+    console.log('grey animals');
+    app.fetch($('select option:selected').val());
+  });
 };
 
 app.send = function(message) {
@@ -28,24 +32,21 @@ app.send = function(message) {
   });
 };
 
-app.fetch = function (roomName) {
+app.fetch = function (filter) {
   $.ajax({
     url: 'https://api.parse.com/1/classes/messages',
     type: 'GET',
-    data: JSON.stringify(message),
+    data: JSON.stringify(),
     contentType: 'application/json',
     success: function (data) {
       app.clearAll();
-      var roomNames = {};
+      var roomNameStorage = {};
       for (var i = 0; i < data.results.length; i++) {
-        if (data.results[i].username) {
-          var temp = _stringFilter(data.results[i]);
-          app.addMessage(temp, roomName);
-
-          if (!roomNames[temp.roomname]) {
-            $('.select').append('<option value=' + temp.roomname.toLowerCase() + '>' + temp.roomname + '</option>');
-            roomNames[temp.roomname] = temp.roomname;
-          }
+        var tempObject = _stringFilter(data.results[i]);
+        app.addMessage(tempObject, filter);
+        if (!roomNameStorage[tempObject.roomname]) {
+          $('.dropDownMenu').append('<option value=' + tempObject.roomname.toLowerCase() + '>' + tempObject.roomname + '</option>');
+          roomNameStorage[tempObject.roomname] = true;
         }
       }
     },
@@ -92,21 +93,20 @@ var _stringFilter = function(object) {
     }
     temp.roomname = tempRoom.join('');    
   } else {
-    temp.roomname = 'empty room';
+    temp.roomname = 'empty_room';
   }
-
 
   return temp;
 };
 
 app.clearAll = function() {
   $('#chats').empty();
-  $('.select').empty();
+  $('.dropDownMenu').empty();
 };
 
 app.addMessage = function (message, filter) {
   if (!filter) {
-    $('#chats').append('<div class="' + message.username + ' ' + message.roomname + '">' + message.username + ': <span>' + message.text + '</span>' + ' </div>');
+    $('#chats').prepend('<div class="' + message.username + ' ' + message.roomname + '">' + message.username + ': <span>' + message.text + '</span>' + ' </div>');
   } else {
     if (message.roomname === filter) {
       $('#chats').append('<div class="' + message.username + ' ' + message.roomname + '">' + message.username + ': <span>' + message.text + '</span>' + ' </div>');
@@ -123,6 +123,7 @@ app.addFriend = function() {
 };
 
 app.handleSubmit = function() {
+
   var message = {
     username: decodeURIComponent(document.location.search.split('=')[1]),
     text: $('input').val(),
@@ -136,5 +137,5 @@ setInterval(app.fetch, 10000);
 
 app.init();
 
-var message = {};
 app.fetch();
+
